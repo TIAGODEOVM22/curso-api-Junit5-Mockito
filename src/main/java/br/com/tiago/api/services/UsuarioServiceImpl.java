@@ -3,6 +3,7 @@ package br.com.tiago.api.services;
 import br.com.tiago.api.domain.Usuario;
 import br.com.tiago.api.domain.dto.UsuarioDto;
 import br.com.tiago.api.repositories.UsuarioRepository;
+import br.com.tiago.api.services.exceptions.DataIntegratyViolationException;
 import br.com.tiago.api.services.exceptions.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,16 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     public Usuario create(UsuarioDto obj) {
+        findByEmail(obj);
         return usuarioRepository.save(mapper.map(obj, Usuario.class));
     }/*precisei usar uma injeção de dep. do ModelMapper
          para transformar o DTO em Model*/
+
+    private void findByEmail(UsuarioDto obj){
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(obj.getEmail());
+        if(usuario.isPresent()){
+            throw new DataIntegratyViolationException("Email já cadastrado!");
+        }
+    }
+
 }
