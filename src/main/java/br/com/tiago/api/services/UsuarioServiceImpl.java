@@ -1,8 +1,10 @@
 package br.com.tiago.api.services;
 
 import br.com.tiago.api.domain.Usuario;
+import br.com.tiago.api.domain.dto.UsuarioDto;
 import br.com.tiago.api.repositories.UsuarioRepository;
 import br.com.tiago.api.services.exceptions.ObjectNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private ModelMapper mapper;
+
     @Override
     public Usuario findById(Integer id) {
         Optional<Usuario> obj = usuarioRepository.findById(id);
@@ -26,4 +31,11 @@ public class UsuarioServiceImpl implements UsuarioService{
     public List <Usuario> findAll(){
         return usuarioRepository.findAll();
     }
+
+
+    @Override
+    public Usuario create(UsuarioDto obj) {
+        return usuarioRepository.save(mapper.map(obj, Usuario.class));
+    }/*precisei usar uma injeção de dep. do ModelMapper
+         para transformar o DTO em Model*/
 }

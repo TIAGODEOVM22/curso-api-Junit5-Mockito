@@ -6,11 +6,10 @@ import br.com.tiago.api.services.UsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,20 @@ public class UsuarioResource {
     public ResponseEntity<List<UsuarioDto>> findAll(){
 
         List<Usuario> list = usuarioService.findAll();
-        List<UsuarioDto> listDTO = list.stream().map(x -> mapper.map(x, UsuarioDto.class)).collect(Collectors.toList());
+        List<UsuarioDto> listDTO = list.stream()
+                .map(x -> mapper.map(x, UsuarioDto.class)).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDTO);
     }
+
+    @PostMapping
+    public ResponseEntity<UsuarioDto> create(@RequestBody UsuarioDto obj){
+        Usuario newObj = usuarioService.create(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(newObj.getId()).toUri();
+        return ResponseEntity.created(uri).build();
+        /*status created retorna 201
+        * porém preciso criar uma URI de acesso ao novo OBJETO*/
+
+    }
+
 }
