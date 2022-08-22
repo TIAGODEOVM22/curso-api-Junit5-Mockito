@@ -41,9 +41,15 @@ public class UsuarioServiceImpl implements UsuarioService{
     }/*precisei usar uma injeção de dep. do ModelMapper
          para transformar o DTO em Model*/
 
-    private void findByEmail(UsuarioDto obj){
+                        @Override
+                        public Usuario update(UsuarioDto obj) {
+                           findByEmail(obj);
+                            return usuarioRepository.save(mapper.map(obj, Usuario.class));
+                        }
+
+                        private void findByEmail(UsuarioDto obj){
         Optional<Usuario> usuario = usuarioRepository.findByEmail(obj.getEmail());
-        if(usuario.isPresent()){
+        if(usuario.isPresent() && !usuario.get().getId().equals(obj.getId())){
             throw new DataIntegratyViolationException("Email já cadastrado!");
         }
     }

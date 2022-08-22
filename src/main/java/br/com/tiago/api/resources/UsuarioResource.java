@@ -50,4 +50,13 @@ public class UsuarioResource {
 
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UsuarioDto>update(@PathVariable Integer id, @RequestBody UsuarioDto obj){
+    obj.setId(id);/*só para garantir que é o mesmo id que veio na url*/
+    Usuario newObj = usuarioService.update(obj);
+    return ResponseEntity.ok().body(mapper.map(newObj, UsuarioDto.class));
+
+    }
+
+
 }
