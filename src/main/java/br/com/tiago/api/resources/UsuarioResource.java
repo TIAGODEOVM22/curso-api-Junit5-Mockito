@@ -36,6 +36,7 @@ public class UsuarioResource {
         List<Usuario> list = usuarioService.findAll();
         List<UsuarioDto> listDTO = list.stream()
                 .map(x -> mapper.map(x, UsuarioDto.class)).collect(Collectors.toList());
+            /*para cada obj X sera mapeado para DTO e depois coletado e tranf em uma lista */
         return ResponseEntity.ok().body(listDTO);
     }
 
