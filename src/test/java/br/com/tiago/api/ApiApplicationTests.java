@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ApiApplicationTests {
 
     @Test
-    void contextLoads() {
+    void main() {/*contextLoads sera substituido pelo metodo main*/
+        ApiApplication.main(new String[]{});
     }
 
 }
